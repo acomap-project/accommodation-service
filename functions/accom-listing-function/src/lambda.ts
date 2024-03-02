@@ -26,14 +26,13 @@ export const handler = async (event: any, context: Context) => {
 	init()
 	console.log(event)
 	// get query params from lambda event
-	const query = event.queryStringParameters || {}
 	const result = await controller.queryAccommodationByDistrict({
-		district: query.district || null,
-		most_recent_days: parseInt(query.most_recent_days) || 3,
-		min_price: parseInt(query.min_price) || 0,
-		max_price: parseInt(query.max_price) || 100000000,
-		location: query.location,
-		max_distance: parseInt(query.max_distance) || -1,
+		district: event.district || null,
+		most_recent_days: parseInt(event.most_recent_days) || 3,
+		min_price: parseInt(event.min_price) || 0,
+		max_price: parseInt(event.max_price) || 100000000,
+		location: event.location,
+		max_distance: parseInt(event.max_distance) || -1,
 	})
 	return {
 		statusCode: 200,
