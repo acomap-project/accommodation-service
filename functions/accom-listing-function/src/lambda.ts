@@ -34,20 +34,5 @@ export const handler = async (event: any, context: Context) => {
 		location: event.location,
 		max_distance: parseInt(event.max_distance) || -1,
 	})
-	return {
-		statusCode: 200,
-		body: JSON.stringify(result),
-		// add CORS headers
-		headers: {
-			...getCORSHeaders(),
-		},
-	}
-}
-
-const getCORSHeaders = () => {
-	return {
-		'Access-Control-Allow-Origin': '*',
-		'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-		'Access-Control-Allow-Headers': '*',
-	}
+	return result
 }

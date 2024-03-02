@@ -28,7 +28,7 @@ app.options('*', (req, res) => {
 })
 app.get('/accommodations', async (req: Request, res: Response) => {
 	try {
-		const { body, headers, statusCode } = await handler(
+		const result = await handler(
 			{
 				queryStringParameters: req.query as any,
 				body: '',
@@ -46,7 +46,7 @@ app.get('/accommodations', async (req: Request, res: Response) => {
 			{} as any,
 		)
 
-		res.set(headers).status(statusCode).json(JSON.parse(body))
+		res.status(200).json(result)
 	} catch (error) {
 		console.error(error)
 		res.status(500).json({
