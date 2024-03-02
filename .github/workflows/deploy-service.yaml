@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+jobs:
+  build-accom-listing-function:
+    uses: ./.github/workflows/build-lambda-function.yaml
+    with:
+      name: accom-listing-service
+      lambda-function-name: ACCOM_accom-listing-function
+      assume-role: ACCOM_accom-listing-function-role
+      region: ap-southeast-1
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      account-id: ${{ secrets.AWS_ACCOUNT_ID }}
+
+
+  build-accom-management-function:
+    uses: ./.github/workflows/build-lambda-function.yaml
+    with:
+      name: accom-listing-service
+      lambda-function-name: ACCOM_accom-management-function
+      assume-role: accom-listing-service-role
+      region: ap-southeast-1
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      account-id: ${{ secrets.AWS_ACCOUNT_ID }}
