@@ -10,7 +10,7 @@ jobs:
   build-accom-listing-function:
     uses: ./.github/workflows/build-lambda-function.yaml
     with:
-      name: accom-listing-service
+      name: accom-listing-function
       lambda-function-name: ACCOM_accom-listing-function
       assume-role: ACCOM_accom-listing-function-role
       region: ap-southeast-1
@@ -23,9 +23,9 @@ jobs:
   build-accom-management-function:
     uses: ./.github/workflows/build-lambda-function.yaml
     with:
-      name: accom-listing-service
+      name: accom-management-function
       lambda-function-name: ACCOM_accom-management-function
-      assume-role: accom-listing-service-role
+      assume-role: ACCOM_accom-management-function-role
       region: ap-southeast-1
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}

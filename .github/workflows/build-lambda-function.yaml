@@ -47,6 +47,7 @@ jobs:
           filters: |
             code_changes:
               - 'functions/${{ inputs.name }}/**'
+              - '.github/workflows/**'
             env_changes:
               - 'env/${{ inputs.env }}/${{ inputs.name }}.env'
 
