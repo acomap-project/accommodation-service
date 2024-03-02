@@ -1,4 +1,4 @@
-import { APIGatewayProxyEvent, Context } from 'aws-lambda'
+import { Context } from 'aws-lambda'
 import { AccommodationController } from './controllers'
 import { AccommodationRepository } from './database'
 import { MapboxService } from './services/mapbox.map-service'
@@ -22,11 +22,9 @@ const init = () => {
 	isInit = true
 }
 
-export const handler = async (
-	event: APIGatewayProxyEvent,
-	context: Context,
-) => {
+export const handler = async (event: any, context: Context) => {
 	init()
+	console.log(event)
 	// get query params from lambda event
 	const query = event.queryStringParameters || {}
 	const result = await controller.queryAccommodationByDistrict({
