@@ -64,12 +64,12 @@ jobs:
           node-version: 18.x
 
       - name: Install dependencies
-        working-directory: apps/${{ inputs.name }}
+        working-directory: functions/${{ inputs.name }}
         run: npm install
 
       - name: Build
         id: build
-        working-directory: apps/${{ inputs.name }}
+        working-directory: functions/${{ inputs.name }}
         run: npm run build
 
       - name: Upload
