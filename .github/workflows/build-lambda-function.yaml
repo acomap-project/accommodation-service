@@ -13,9 +13,6 @@ on:
       lambda-function-name:
         required: true
         type: string
-      assume-role:
-        required: true
-        type: string
       uploads:
         required: false
         type: string

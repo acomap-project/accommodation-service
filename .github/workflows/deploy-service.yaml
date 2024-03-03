@@ -12,7 +12,6 @@ jobs:
     with:
       name: accom-listing-function
       lambda-function-name: ACCOM_accom-listing-function
-      assume-role: ACCOM_accom-listing-function-role
       region: ap-southeast-1
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -25,7 +24,6 @@ jobs:
     with:
       name: accom-management-function
       lambda-function-name: ACCOM_accom-management-function
-      assume-role: ACCOM_accom-management-function-role
       region: ap-southeast-1
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
