@@ -26,10 +26,11 @@ export const handler = async (event: SQSEvent, context: Context) => {
 	let accomList: Accommodation[] = []
 
 	// event is SQS Event
-	if (!event.Records) {
+	if (event.Records) {
 		accomList = getAccomListFromSQSEvent(event)
 	} else {
 		console.log('No records found in event')
+		return
 	}
 
 	await controller.batchSaveAccommodations({
