@@ -26,8 +26,10 @@ export const handler = async (event: SQSEvent, context: Context) => {
 	let accomList: Accommodation[] = []
 
 	// event is SQS Event
-	if (event.Records) {
+	if (!event.Records) {
 		accomList = getAccomListFromSQSEvent(event)
+	} else {
+		console.log('No records found in event')
 	}
 
 	await controller.batchSaveAccommodations({
@@ -38,15 +40,13 @@ export const handler = async (event: SQSEvent, context: Context) => {
 }
 
 function getAccomListFromSQSEvent(event: SQSEvent): Accommodation[] {
-	return event.Records.flatMap((record) => {
+	return event.Records.map((record) => {
 		try {
-			const jsonBody =
+			const accom =
 				typeof record.body === 'string'
 					? JSON.parse(record.body)
 					: record.body
-			const items = jsonBody.item_list
-
-			return items
+			return accom
 		} catch (error) {
 			console.error('Error parsing json', error)
 			throw error
