@@ -15,7 +15,6 @@ export interface Accommodation {
 	numberOfWCs: number
 	publishedDate: string
 	location: Coordination
-	isLocationResolved: boolean
 	phoneNumber: string
 	address: string
 	description: string
