@@ -30,20 +30,27 @@ export class AccommodationRepository {
 		try {
 			const results = await Promise.all(
 				dateList.map(async (date) => {
-					const command = new QueryCommand({
-						TableName: this.config.tableName,
-						KeyConditionExpression: 'publishedDate = :date',
-						FilterExpression:
-							'isLocationResolved = :isLocationResolved',
-						ExpressionAttributeValues: {
-							':date': { S: date },
-							':isLocationResolved': { BOOL: true },
-						},
-						IndexName: 'publishedDate-price-index',
-					})
+					let startKey
+					const items = []
+					do {
+						const command = new QueryCommand({
+							TableName: this.config.tableName,
+							KeyConditionExpression: 'publishedDate = :date',
+							FilterExpression:
+								'isLocationResolved = :isLocationResolved',
+							ExpressionAttributeValues: {
+								':date': { S: date },
+								':isLocationResolved': { BOOL: true },
+							},
+							ExclusiveStartKey: startKey,
+							IndexName: 'publishedDate-price-index',
+						})
 
-					const response = await client.send(command)
-					return response.Items
+						const response = await client.send(command)
+						items.push(...response.Items)
+						startKey = response.LastEvaluatedKey
+					} while (startKey)
+					return items
 				}),
 			).then((responseResults) => {
 				return responseResults.flatMap((item) => item)

@@ -9,6 +9,8 @@ import { handler } from './lambda'
 
 const app = express()
 
+app.use(express.json())
+
 app.use((req, res, next) => {
 	res.set({
 		'Access-Control-Allow-Origin': '*',
@@ -28,23 +30,7 @@ app.options('*', (req, res) => {
 })
 app.get('/accommodations', async (req: Request, res: Response) => {
 	try {
-		const result = await handler(
-			{
-				queryStringParameters: req.query as any,
-				body: '',
-				headers: undefined,
-				multiValueHeaders: undefined,
-				httpMethod: '',
-				isBase64Encoded: false,
-				path: '',
-				pathParameters: undefined,
-				multiValueQueryStringParameters: undefined,
-				stageVariables: undefined,
-				requestContext: undefined,
-				resource: '',
-			},
-			{} as any,
-		)
+		const result = await handler(req.query as any, {} as any)
 
 		res.status(200).json(result)
 	} catch (error) {

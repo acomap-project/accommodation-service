@@ -2,7 +2,7 @@ export const convertLocationToCoordination = (location: string) => {
 	if (!location) {
 		return null
 	}
-	const [longitude, latitude] = location
+	const [latitude, longitude] = location
 		.split(',')
 		.map((item) => parseFloat(item))
 	if (isNaN(longitude) || isNaN(latitude)) {

@@ -1,11 +1,11 @@
-import { Accommodation } from '../../models'
+import { Accommodation, Coordination } from '../../models'
 
 export class QueryAccommodationsDTO {
 	district: string
 	most_recent_days: number
 	min_price: number
 	max_price: number
-	location: string
+	location: Coordination
 	max_distance: number
 }
 

@@ -20,8 +20,6 @@ export class AccommodationController {
 			max_distance: maxDistance,
 		} = query
 
-		const userCoordination = convertLocationToCoordination(location)
-
 		const dateList = convertRecentDaysToDateList(most_recent_days)
 		const condition = {
 			dateList,
@@ -36,6 +34,7 @@ export class AccommodationController {
 			return {
 				status: 'OK',
 				items: accommodationList,
+				count: accommodationList.length,
 			}
 		}
 
@@ -44,8 +43,8 @@ export class AccommodationController {
 			accommodationList.map(async (accommodation) => {
 				const distance = await this.mapService.calculateDistance(
 					{
-						latitude: userCoordination.latitude,
-						longitude: userCoordination.longitude,
+						latitude: location.latitude,
+						longitude: location.longitude,
 					},
 					{
 						latitude: accommodation.location.latitude,
@@ -64,6 +63,7 @@ export class AccommodationController {
 		return {
 			status: 'OK',
 			items: filterByDistanceList,
+			count: filterByDistanceList.length,
 		}
 	}
 }
