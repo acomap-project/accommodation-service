@@ -25,6 +25,9 @@ export class AccommodationRepository {
 		if (accomList.length === 0) {
 			return
 		}
+		const expiredTime =
+			Math.round(Date.now() / 1000) +
+			this.config.expiryDurationInDays * 24 * 60 * 60
 		const putRequests: any[] = accomList.map((item) => {
 			return {
 				PutRequest: {
@@ -63,9 +66,9 @@ export class AccommodationRepository {
 						updatedAt: {
 							N: (item.updatedAt || Date.now()).toString(),
 						},
-						expiredAt:
-							Math.round(Date.now() / 1000) +
-							this.config.expiryDurationInDays * 24 * 60 * 60,
+						expiredAt: {
+							N: expiredTime.toString(),
+						},
 					},
 				},
 			}
