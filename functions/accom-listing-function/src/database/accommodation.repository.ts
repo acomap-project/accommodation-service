@@ -9,10 +9,12 @@ export interface Config {
 }
 
 export interface QueryCondition {
-	dateList: string[]
-	minPrice: number
-	maxPrice: number
-	district: string
+	cityCode: string
+	areaCode?: string
+	dateList?: string[]
+	area_code?: string
+	minPrice?: number
+	maxPrice?: number
 }
 
 export class AccommodationRepository {
@@ -25,72 +27,66 @@ export class AccommodationRepository {
 			dateList,
 			minPrice = 0,
 			maxPrice = 1000000000,
-			district = null,
+			cityCode,
+			areaCode = null,
 		} = condition
 		try {
-			const results = await Promise.all(
-				dateList.map(async (date) => {
-					let startKey
-					const items = []
-					do {
-						const command = new QueryCommand({
-							TableName: this.config.tableName,
-							KeyConditionExpression: 'publishedDate = :date',
-							FilterExpression:
-								'isLocationResolved = :isLocationResolved',
-							ExpressionAttributeValues: {
-								':date': { S: date },
-								':isLocationResolved': { BOOL: true },
-							},
-							ExclusiveStartKey: startKey,
-							IndexName: 'publishedDate-price-index',
-						})
+			let keyConditionExpression = 'cityCode = :cityCode'
+			if (areaCode) {
+				keyConditionExpression += ' AND areaCode = :areaCode'
+			}
 
-						const response = await client.send(command)
-						items.push(...response.Items)
-						startKey = response.LastEvaluatedKey
-					} while (startKey)
-					return items
-				}),
-			).then((responseResults) => {
-				return responseResults.flatMap((item) => item)
-			})
-
-			const accomList: Accommodation[] = results
-				.filter((result) => result.isLocationResolved.BOOL === true)
-				.map((item) => {
-					const longitude = item.location.M.longitude.N
-					const latitude = item.location.M.latitude.N
-					return {
-						id: item.id.S,
-						source: item.source.S,
-						propUrl: item.propUrl.S,
-						propertyName: item.propertyName.S,
-						price: parseFloat(item.price.N),
-						area: parseInt(item.area.N),
-						numberOfBedRooms: parseInt(item.numberOfBedRooms.N),
-						numberOfWCs: parseInt(item.numberOfWCs.N),
-						publishedDate: item.publishedDate.S,
-						isLocationResolved: item.isLocationResolved.BOOL,
-						location: {
-							longitude: parseFloat(longitude),
-							latitude: parseFloat(latitude),
-						},
-						phoneNumber: item.phoneNumber.S,
-						address: item.address.S,
-						description: item.description.S,
-					}
+			let startKey
+			const items = []
+			do {
+				const command = new QueryCommand({
+					TableName: this.config.tableName,
+					KeyConditionExpression: keyConditionExpression,
+					ExpressionAttributeValues: {
+						':cityCode': { S: cityCode },
+						...(areaCode && {
+							':areaCode': { S: areaCode },
+						}),
+					},
+					ExclusiveStartKey: startKey,
+					IndexName: 'city_code-area_code-index',
 				})
 
-			const filter = (item: Accommodation) => {
-				let hasDistrict = true
-				if (district) {
-					hasDistrict = item.address.includes(district)
+				const response = await client.send(command)
+				items.push(...response.Items)
+				startKey = response.LastEvaluatedKey
+			} while (startKey)
+
+			const accomList: Accommodation[] = items.map((item) => {
+				const longitude = item.location.M.longitude.N
+				const latitude = item.location.M.latitude.N
+				return {
+					id: item.id.S,
+					source: item.source.S,
+					cityCode: item.cityCode.S,
+					areaCode: item.areaCode.S,
+					propUrl: item.propUrl.S,
+					propertyName: item.propertyName.S,
+					price: parseFloat(item.price.N),
+					area: parseInt(item.area.N),
+					numberOfBedRooms: parseInt(item.numberOfBedRooms.N),
+					numberOfWCs: parseInt(item.numberOfWCs.N),
+					publishedDate: item.publishedDate.S,
+					location: {
+						longitude: parseFloat(longitude),
+						latitude: parseFloat(latitude),
+					},
+					phoneNumber: item.phoneNumber.S,
+					address: item.address.S,
+					description: item.description.S,
 				}
+			})
+
+			const filter = (item: Accommodation) => {
 				return (
-					hasDistrict &&
 					item.price >= minPrice &&
-					item.price <= maxPrice
+					item.price <= maxPrice &&
+					dateList.includes(item.publishedDate)
 				)
 			}
 			return accomList.filter(filter)

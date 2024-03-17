@@ -1,8 +1,8 @@
 import { convertRecentDaysToDateList } from '../utils/convert-recent-days-to-date-list'
 import { QueryAccommodationsDTO } from './dtos/query-accommodations.dtos'
 import { AccommodationRepository } from '../database'
-import { convertLocationToCoordination } from '../utils/convert-location-to-coordination'
 import { IMapService } from '../interfaces/map-service.interfaces'
+import { QueryCondition } from '../database/accommodation.repository'
 
 export class AccommodationController {
 	constructor(
@@ -12,7 +12,8 @@ export class AccommodationController {
 
 	async queryAccommodationByDistrict(query: QueryAccommodationsDTO) {
 		const {
-			district,
+			cityCode,
+			areaCode,
 			most_recent_days,
 			min_price,
 			max_price,
@@ -21,16 +22,17 @@ export class AccommodationController {
 		} = query
 
 		const dateList = convertRecentDaysToDateList(most_recent_days)
-		const condition = {
+		const condition: QueryCondition = {
 			dateList,
 			minPrice: min_price,
 			maxPrice: max_price,
-			district,
+			cityCode,
+			areaCode,
 		}
 		const accommodationList =
 			await this.accommodationRepository.queryWithConditions(condition)
 
-		if (maxDistance === -1) {
+		if (!location) {
 			return {
 				status: 'OK',
 				items: accommodationList,

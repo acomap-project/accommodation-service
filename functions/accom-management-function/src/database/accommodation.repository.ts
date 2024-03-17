@@ -28,6 +28,8 @@ export class AccommodationRepository {
 			return {
 				PutRequest: {
 					Item: {
+						cityCode: { S: item.cityCode },
+						areaCode: { S: item.areaCode },
 						source: { S: item.source },
 						id: { S: item.id },
 						propUrl: { S: item.propUrl },

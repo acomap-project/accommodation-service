@@ -5,6 +5,8 @@ export interface Coordination {
 
 export interface Accommodation {
 	id: string
+	cityCode: string
+	areaCode: string
 	propUrl: string
 	propertyName: string
 	price: number
@@ -13,7 +15,6 @@ export interface Accommodation {
 	numberOfWCs: number
 	publishedDate: string
 	location: Coordination
-	isLocationResolved: boolean
 	phoneNumber: string
 	address: string
 	description: string
