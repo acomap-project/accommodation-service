@@ -59,7 +59,7 @@ export class AccommodationRepository {
 						source: item.source.S,
 						propUrl: item.propUrl.S,
 						propertyName: item.propertyName.S,
-						price: parseInt(item.price.N),
+						price: parseFloat(item.price.N),
 						area: parseInt(item.area.N),
 						numberOfBedRooms: parseInt(item.numberOfBedRooms.N),
 						numberOfWCs: parseInt(item.numberOfWCs.N),
