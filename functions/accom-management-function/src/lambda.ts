@@ -14,6 +14,7 @@ const init = () => {
 	const repo = new AccommodationRepository({
 		tableName: process.env.ACCOMMODATION_TABLE_NAME,
 		limit: 25,
+		expiryDurationInDays: 10,
 	})
 	controller = new AccommodationController(repo)
 
@@ -32,6 +33,15 @@ export const handler = async (event: SQSEvent, context: Context) => {
 		console.log('No records found in event')
 		return
 	}
+
+	accomList.forEach((accom) => {
+		accom.description ||= ''
+		accom.phoneNumber ||= ''
+		accom.address ||= ''
+		accom.numberOfBedRooms ||= -1
+		accom.numberOfWCs ||= -1
+		accom.area ||= -1
+	})
 
 	await controller.batchSaveAccommodations({
 		items: accomList,

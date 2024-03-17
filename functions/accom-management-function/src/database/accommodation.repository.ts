@@ -6,6 +6,7 @@ const client = new DynamoDBClient()
 export interface Config {
 	tableName: string
 	limit: number
+	expiryDurationInDays: number
 }
 
 export interface QueryCondition {
@@ -56,15 +57,15 @@ export class AccommodationRepository {
 								},
 							},
 						}),
-						isLocationResolved: {
-							BOOL: item.isLocationResolved,
-						},
 						createdAt: {
 							N: (item.createdAt || Date.now()).toString(),
 						},
 						updatedAt: {
 							N: (item.updatedAt || Date.now()).toString(),
 						},
+						expiredAt:
+							Math.round(Date.now() / 1000) +
+							this.config.expiryDurationInDays * 24 * 60 * 60,
 					},
 				},
 			}
