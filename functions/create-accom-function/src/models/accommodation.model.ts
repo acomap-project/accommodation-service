@@ -17,7 +17,6 @@ export interface Accommodation {
 	location: Coordination
 	phoneNumber: string
 	address: string
-	description: string
 	source: string
 	createdAt: number
 	updatedAt: number

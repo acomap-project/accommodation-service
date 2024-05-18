@@ -35,7 +35,6 @@ export const handler = async (event: SQSEvent, context: Context) => {
 	}
 
 	accomList.forEach((accom) => {
-		accom.description ||= ''
 		accom.phoneNumber ||= ''
 		accom.address ||= ''
 		accom.numberOfBedRooms ||= -1

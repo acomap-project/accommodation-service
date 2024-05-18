@@ -47,7 +47,6 @@ export class AccommodationRepository {
 						publishedDate: { S: item.publishedDate },
 						phoneNumber: { S: item.phoneNumber },
 						address: { S: item.address },
-						description: { S: item.description },
 						...(item.location && {
 							location: {
 								M: {
