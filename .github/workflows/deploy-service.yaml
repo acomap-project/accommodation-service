@@ -19,11 +19,11 @@ jobs:
       account-id: ${{ secrets.AWS_ACCOUNT_ID }}
 
 
-  build-accom-management-function:
+  build-create-accom-function:
     uses: ./.github/workflows/build-lambda-function.yaml
     with:
-      name: accom-management-function
-      lambda-function-name: ACCOM_accom-management-function
+      name: create-accom-function
+      lambda-function-name: ACCOM_create-accom-function
       region: ap-southeast-1
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
